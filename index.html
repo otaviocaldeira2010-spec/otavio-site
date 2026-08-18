@@ -1,356 +1,223 @@
-import { defineConfig, type HtmlTagDescriptor, type Plugin } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import path from 'node:path'
+import { motion } from "framer-motion"
+import { MonitorSmartphone, PenTool, CheckCircle2, ArrowRight } from "lucide-react"
 
-import siteConfiguration from './.figma/make/site.json'
+import heroPhoto from "./imports/WhatsApp_Image_2026-08-17_at_22.51.16.jpeg"
+import footerPhoto from "./imports/WhatsApp_Image_2026-08-17_at_22.59.38.jpeg"
 
-// Vite config — https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  // .figma/make/deploy-preview passes `--mode development` for cached-preview builds.
-  const emitSourcemaps = mode === 'development'
+export default function App() {
+  const fadeUp = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+  }
 
-  return {
-    base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : '/',
-    build: {
-      sourcemap: emitSourcemaps ? 'inline' : false,
-      minify: !emitSourcemaps,
-    },
-    plugins: [
-      react(),
-      tailwindcss(),
-      figmaSiteConfiguration(siteConfiguration),
-      figmaErrorOverlayReplay(),
-      figmaReactRefreshBoundaryFallback(),
-      figmaMakeKitPlugin({ storiesGlob: '/src/**/*.stories.{ts,tsx,js,jsx}' }),
-    ],
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'),
-      },
-    },
-    server: {
-      host: '0.0.0.0',
-      port: parseInt(process.env.PORT || '8443'),
-      strictPort: true,
-      watch: { ignored: ['**/.figma/**'] },
-    },
-    preview: {
-      host: '0.0.0.0',
-      port: parseInt(process.env.PORT || '8443'),
-    },
+  const scaleUp = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
   }
-})
 
-type FigmaSiteConfiguration = {
-  title?: string
-  description?: string
-  language?: string
-  robots?: {
-    index?: boolean
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15 }
+    }
   }
-  icons?: {
-    icon?: string
-  }
-  openGraph?: {
-    image?: string
-  }
-  analytics?: {
-    googleAnalyticsId?: string
-  }
-  customScripts?: {
-    headStart?: string
-    headEnd?: string
-    bodyStart?: string
-    bodyEnd?: string
-  }
-  accessibility?: {
-    addBypassLinks?: boolean
-  }
+
+  return (
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden font-sans">
+      
+      {/* Fundo sutil texturizado */}
+      <div className="fixed inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+
+      <main className="max-w-7xl mx-auto px-6 py-20 relative z-10 flex flex-col gap-40">
+        
+        {/* Dobra 1: Apresentação */}
+        <motion.section 
+          initial="hidden" 
+          whileInView="visible" 
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+          className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24"
+        >
+          <motion.div variants={scaleUp} className="w-full lg:w-1/2 relative group">
+            <div className="absolute inset-0 bg-white/5 translate-x-4 translate-y-4 rounded-xl -z-10 transition-transform duration-500 group-hover:translate-x-6 group-hover:translate-y-6"></div>
+            <img 
+              src={heroPhoto} 
+              alt="Otávio Santos Caldeira" 
+              className="relative w-full aspect-[3/4] lg:aspect-square object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-700"
+            />
+          </motion.div>
+          
+          <motion.div variants={fadeUp} className="w-full lg:w-1/2 flex flex-col gap-8">
+            <motion.h1 
+              variants={fadeUp}
+              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tighter"
+            >
+              Otávio Santos Caldeira
+            </motion.h1>
+            <motion.p variants={fadeUp} className="text-2xl md:text-3xl text-gray-400 font-display">
+              Criando ideias, transformando sonhos em sites
+            </motion.p>
+            
+            <motion.div variants={fadeUp} className="glass-panel p-10 rounded-xl mt-4 hover:border-gray-600 transition-colors duration-500">
+              <h2 className="text-3xl font-bold mb-6 text-white font-display">Prazer, eu sou o Otávio!</h2>
+              <div className="space-y-6 text-gray-400 leading-relaxed text-lg">
+                <p>
+                  Meu nome é <strong className="text-white font-medium">Otávio Santos Caldeira</strong>, tenho <strong className="text-white font-medium">15 anos</strong> e sou apaixonado por tecnologia, criatividade e pela possibilidade de transformar uma ideia em algo que as pessoas possam realmente ver, acessar e compartilhar.
+                </p>
+                <p>
+                  Desde cedo, sempre gostei de descobrir como as coisas funcionam e, principalmente, de criar. Para mim, um site não é apenas uma página na internet: é a <strong className="text-white font-medium">primeira impressão de uma pessoa, empresa ou projeto no mundo digital</strong>.
+                </p>
+                <p>
+                  Gosto de pensar nos detalhes, testar novas ideias e buscar maneiras de deixar cada projeto bonito, moderno, organizado e fácil de usar. Cada novo trabalho é também uma oportunidade de aprender alguma coisa diferente e colocar minha criatividade em prática.
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        </motion.section>
+
+        {/* Dobra 2: Serviços */}
+        <motion.section 
+          initial="hidden" 
+          whileInView="visible" 
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+          className="flex flex-col gap-16"
+        >
+          <motion.div variants={fadeUp} className="max-w-4xl">
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 font-display tracking-tight">Meu novo trabalho</h2>
+            <p className="text-2xl text-gray-300 leading-snug">
+              Agora, estou dando um passo ainda maior nessa jornada: comecei a <strong className="text-white">criar sites personalizados para pessoas, projetos e negócios</strong>.
+            </p>
+            <p className="text-xl text-gray-500 mt-6 max-w-3xl">
+              A ideia é simples: você me conta o que precisa, eu entendo o que você imagina e transformo essa ideia em um site feito para você. Posso criar diferentes tipos de páginas, desde uma apresentação pessoal até páginas para negócios, projetos, portfólios, serviços e muito mais.
+            </p>
+          </motion.div>
+
+          <motion.div variants={staggerContainer} className="grid md:grid-cols-3 gap-6">
+            <motion.div variants={fadeUp} whileHover={{ y: -10 }} transition={{ duration: 0.3 }}>
+              <FeatureCard 
+                icon={<MonitorSmartphone />}
+                title="Experiência Adaptada"
+                desc="Design responsivo pensado para funcionar perfeitamente em celular e computador."
+              />
+            </motion.div>
+            <motion.div variants={fadeUp} whileHover={{ y: -10 }} transition={{ duration: 0.3 }}>
+              <FeatureCard 
+                icon={<PenTool />}
+                title="Design Pensado"
+                desc="Projetos personalizados de acordo com a sua ideia e identidade visual."
+              />
+            </motion.div>
+            <motion.div variants={fadeUp} whileHover={{ y: -10 }} transition={{ duration: 0.3 }}>
+              <FeatureCard 
+                icon={<CheckCircle2 />}
+                title="Acessível"
+                desc="Meus projetos começam a partir de apenas R$ 200, com parcelamento em até 5x."
+              />
+            </motion.div>
+          </motion.div>
+
+          <motion.div variants={fadeUp} whileHover={{ scale: 1.02 }} transition={{ duration: 0.5 }} className="w-full glass-panel rounded-xl p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-10">
+             <div>
+                <h3 className="text-3xl font-bold text-white mb-4 font-display">Pronto para começar?</h3>
+                <ul className="text-gray-400 space-y-3 text-lg">
+                  <li className="flex items-center gap-3"><span className="w-2 h-2 bg-white rounded-full"></span> <strong className="text-white font-medium">A partir de R$ 200 por site</strong></li>
+                  <li className="flex items-center gap-3"><span className="w-2 h-2 bg-white rounded-full"></span> <strong className="text-white font-medium">Parcelamento em até 5x</strong></li>
+                </ul>
+             </div>
+             <button className="bg-white text-black hover:bg-gray-200 px-8 py-4 rounded-full font-bold text-lg transition-all flex items-center gap-3 flex-shrink-0 group">
+                Fazer orçamento
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+             </button>
+          </motion.div>
+        </motion.section>
+
+        {/* Dobra 3: Por que criar um site & Contato */}
+        <motion.section 
+          initial="hidden" 
+          whileInView="visible" 
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+          className="flex flex-col lg:flex-row gap-20 items-start pb-20"
+        >
+          <div className="w-full lg:w-1/2 flex flex-col gap-20">
+            <motion.div variants={fadeUp}>
+              <h2 className="text-4xl font-extrabold mb-8 font-display tracking-tight">
+                Por que criar um site?
+              </h2>
+              <div className="space-y-6 text-gray-400 text-lg leading-relaxed">
+                <p>Hoje, estar na internet pode fazer toda a diferença.</p>
+                <p>Um bom site pode ajudar alguém a apresentar seu trabalho, divulgar um negócio, mostrar seus projetos, conquistar novos clientes ou simplesmente ter um espaço próprio para contar sua história. E é exatamente isso que quero ajudar você a fazer.</p>
+                <p className="text-2xl text-white font-display border-l-4 border-white pl-6 py-2 mt-8">
+                  Você traz a ideia. Eu ajudo a transformar essa ideia em presença digital.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div variants={fadeUp}>
+              <h2 className="text-4xl font-extrabold mb-8 font-display tracking-tight">
+                Mais do que um site
+              </h2>
+              <div className="space-y-6 text-gray-400 text-lg leading-relaxed">
+                <p>Quero que cada projeto tenha personalidade. Não quero simplesmente entregar uma página pronta e dizer "está feito". Quero entender o que você procura, pensar em uma apresentação que combine com você e criar algo que tenha a sua identidade.</p>
+                <p>Tenho muito para aprender e muitos caminhos para percorrer, mas acredito que começar cedo é uma das melhores formas de evoluir. Cada cliente, cada projeto e cada novo desafio fazem parte dessa construção.</p>
+                <p>Aos poucos, estou transformando aquilo que começou como interesse e curiosidade em uma oportunidade para <strong className="text-white">criar, aprender e ajudar outras pessoas</strong>.</p>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div variants={scaleUp} className="w-full lg:w-1/2 glass-panel p-10 md:p-16 rounded-xl flex flex-col items-center text-center gap-10 sticky top-10">
+            <motion.div 
+              whileHover={{ scale: 1.05, rotate: 2 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <img 
+                src={footerPhoto} 
+                alt="Otávio Santos Caldeira" 
+                className="w-48 h-48 object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500"
+              />
+            </motion.div>
+            
+            <div>
+              <h2 className="text-3xl font-extrabold mb-4 font-display">Vamos criar algo juntos?</h2>
+              <p className="text-gray-400 mb-8 text-lg">
+                Se você tem uma ideia para um site, mas não sabe por onde começar, pode falar comigo. Pode ser algo simples, moderno, profissional, criativo ou completamente diferente.
+              </p>
+              <p className="text-2xl font-bold text-white mb-10 font-display">Sua ideia pode começar com uma conversa.</p>
+              
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-black px-10 py-5 rounded-full font-bold text-lg w-full md:w-auto"
+              >
+                Falar com Otávio
+              </motion.button>
+            </div>
+
+            <div className="mt-4 pt-10 border-t border-white/10 w-full text-center">
+              <p className="text-sm text-gray-500 font-bold tracking-widest uppercase mb-4">
+                A partir de R$ 200 • Até 5x • Projetos personalizados
+              </p>
+              <h3 className="font-extrabold text-xl text-white mb-2 font-display">Otávio Santos Caldeira</h3>
+              <p className="text-gray-400 italic">"Criando na internet hoje, construindo meu futuro amanhã."</p>
+            </div>
+          </motion.div>
+        </motion.section>
+
+      </main>
+    </div>
+  )
 }
 
-/** Applies /.figma/make/site.json to the generated document shell. */
-function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
-  function sanitizeHtmlValue(value: string | undefined): string {
-    return value?.replace(/[^a-zA-Z0-9_-]/g, '') || ''
-  }
-  function escapeHtmlText(value: string): string {
-    return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  }
-  function replaceHtmlCommentSlot(html: string, slotName: string, content: string): string {
-    return html.replace(`<!-- ${slotName} -->`, content)
-  }
-
-  const title = config.title ?? "Figma Make App"
-  const description = config.description ?? ''
-  const favicon = config.icons?.icon ?? ''
-  const socialImage = config.openGraph?.image ?? ''
-  const language = sanitizeHtmlValue(config.language) || 'en'
-  const googleAnalyticsId = sanitizeHtmlValue(config.analytics?.googleAnalyticsId)
-  const headStart = config.customScripts?.headStart ?? ''
-  const headEnd = config.customScripts?.headEnd ?? ''
-  const bodyStart = config.customScripts?.bodyStart ?? ''
-  const bodyEnd = config.customScripts?.bodyEnd ?? ''
-  const robotsTxt = config.robots?.index === false ? 'User-agent: *\nDisallow: /\n' : ''
-
-  return {
-    name: 'figma-site-configuration',
-    configureServer(server) {
-      server.middlewares.use((req, res, next) => {
-        if (!robotsTxt || req.url?.split('?')[0] !== '/robots.txt') return next()
-
-        res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-        res.end(robotsTxt)
-      })
-    },
-    generateBundle() {
-      if (!robotsTxt) return
-
-      this.emitFile({
-        type: 'asset',
-        fileName: 'robots.txt',
-        source: robotsTxt,
-      })
-    },
-    transformIndexHtml: {
-      order: 'pre',
-      handler(html) {
-        let result = html
-        result = replaceHtmlCommentSlot(result, 'figma:lang', language)
-        result = replaceHtmlCommentSlot(result, 'figma:title', escapeHtmlText(title))
-        result = replaceHtmlCommentSlot(result, 'figma:head-start', headStart)
-        result = replaceHtmlCommentSlot(result, 'figma:head-end', headEnd)
-        result = replaceHtmlCommentSlot(result, 'figma:body-start', bodyStart)
-        result = replaceHtmlCommentSlot(result, 'figma:body-end', bodyEnd)
-
-        const tags: HtmlTagDescriptor[] = []
-        if (description) {
-          tags.push({ tag: 'meta', attrs: { name: 'description', content: description }, injectTo: 'head' })
-        }
-        if (config.robots?.index === false) {
-          tags.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex, nofollow' }, injectTo: 'head' })
-        }
-        if (favicon) {
-          tags.push({ tag: 'link', attrs: { rel: 'icon', href: favicon }, injectTo: 'head' })
-        }
-        if (title) {
-          tags.push({ tag: 'meta', attrs: { property: 'og:title', content: title }, injectTo: 'head' })
-        }
-        if (description) {
-          tags.push({ tag: 'meta', attrs: { property: 'og:description', content: description }, injectTo: 'head' })
-        }
-        if (socialImage) {
-          tags.push(
-            { tag: 'meta', attrs: { property: 'og:image', content: socialImage }, injectTo: 'head' },
-            { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' }, injectTo: 'head' },
-            { tag: 'meta', attrs: { name: 'twitter:image', content: socialImage }, injectTo: 'head' },
-          )
-        }
-
-        if (googleAnalyticsId) {
-          tags.push(
-            {
-              tag: 'script',
-              attrs: {
-                async: true,
-                src: `https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`,
-              },
-              injectTo: 'head',
-            },
-            {
-              tag: 'script',
-              children: `
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', ${JSON.stringify(googleAnalyticsId)});
-`,
-              injectTo: 'head',
-            },
-          )
-        }
-
-        if (config.accessibility?.addBypassLinks) {
-          tags.push(
-            {
-              tag: 'style',
-              children: `
-  .figma-bypass-link {
-    position: fixed;
-    top: 8px;
-    left: 8px;
-    z-index: 2147483647;
-    transform: translateY(-150%);
-    border-radius: 6px;
-    background: #111827;
-    color: #fff;
-    padding: 8px 12px;
-    font: 600 14px/1.2 system-ui, sans-serif;
-    text-decoration: none;
-  }
-  .figma-bypass-link:focus {
-    transform: translateY(0);
-  }
-`,
-              injectTo: 'head',
-            },
-            {
-              tag: 'a',
-              attrs: { class: 'figma-bypass-link', href: '#root' },
-              children: 'Skip to content',
-              injectTo: 'body-prepend',
-            },
-          )
-        }
-
-        return {
-          html: result,
-          tags,
-        }
-      },
-    },
-  }
-}
-
-/**
- * Replay the most recent build error to clients that connect after
- * it was first broadcast. Vite buffers an error payload only while
- * no clients are connected and clears the buffer on the first
- * reconnect (see `bufferedMessage` in `createWebSocketServer`), so
- * if the preview iframe reloads after Vite already delivered an
- * error to a live socket, the new socket misses the payload and
- * the overlay stays hidden even though the build is still broken.
- * We intercept `ws.send` to remember the latest error and replay
- * it on every new connection; the cache clears on a successful
- * `update` or `full-reload` so a stale overlay can't survive a
- * fixed build.
- */
-function figmaErrorOverlayReplay(): Plugin {
-  return {
-    name: 'figma-error-overlay-replay',
-    apply: 'serve',
-    configureServer(server) {
-      let lastError: object | null = null
-
-      const origSend = server.ws.send.bind(server.ws) as (...args: any[]) => void
-      server.ws.send = ((...args: any[]) => {
-        const payload = args[0]
-        if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
-          const type = (payload as { type?: string }).type
-          if (type === 'error') {
-            lastError = payload as object
-          } else if (type === 'update' || type === 'full-reload') {
-            lastError = null
-          }
-        }
-        return origSend(...args)
-      }) as typeof server.ws.send
-
-      server.ws.on('connection', (socket) => {
-        if (lastError !== null) {
-          socket.send(JSON.stringify(lastError))
-        }
-      })
-    },
-  }
-}
-
-/**
- * Reload when a module that previously defined a React Refresh boundary stops
- * defining one. This happens when an agent moves a component into a new file
- * and replaces the old module with a re-export:
- *
- *   export { default } from './app/App'
- *
- * Vite otherwise accepts the update using the previous module's HMR boundary,
- * but the re-export-only transform no longer registers a replacement for the
- * mounted component family. React reports a successful refresh while leaving
- * the old tree mounted until the page is reloaded.
- */
-function figmaReactRefreshBoundaryFallback(): Plugin {
-  const hadRefreshBoundary = new Map<string, boolean>()
-  let sendFullReload: (() => void) | null = null
-
-  return {
-    name: 'figma-react-refresh-boundary-fallback',
-    apply: 'serve',
-    enforce: 'post',
-    configureServer(server) {
-      sendFullReload = () => server.ws.send({ type: 'full-reload', path: '*' })
-    },
-    transform(code, id) {
-      if (!/\.[jt]sx?(?:\?|$)/.test(id) || id.includes('/node_modules/')) return null
-
-      const moduleId = id.split('?')[0] ?? id
-      const hasRefreshBoundary = code.includes('registerExportsForReactRefresh')
-      const previousHadRefreshBoundary = hadRefreshBoundary.get(moduleId)
-      hadRefreshBoundary.set(moduleId, hasRefreshBoundary)
-
-      if (previousHadRefreshBoundary && !hasRefreshBoundary) {
-        queueMicrotask(() => sendFullReload?.())
-      }
-
-      return null
-    },
-  }
-}
-
-/**
- * Serves a blank render-target page at /.figma/make/kit.html that
- * the Figma preview script drives directly. The page exposes a
- * registry of every file matching `storiesGlob` on
- * window.__FIGMA__.stories so the design surface can dynamically
- * import + mount each entry into its own grid view.
- *
- * Dev-only: `apply: 'serve'` gates the plugin to `vite dev`. Prod
- * builds (`vite build`) skip it entirely so the route doesn't leak
- * into shipped bundles.
- */
-function figmaMakeKitPlugin(options: { storiesGlob: string | string[] }): Plugin {
-  const storiesGlob = Array.isArray(options.storiesGlob) ? options.storiesGlob : [options.storiesGlob]
-  const ROUTE = '/.figma/make/kit.html'
-  const VIRTUAL_ID = 'virtual:figma-stories'
-  const RESOLVED_ID = '\0' + VIRTUAL_ID
-  const STORIES_MODULE = `export const stories = import.meta.glob(${JSON.stringify(storiesGlob)})`
-  const HTML_BOOTSTRAP = `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
-<body>
-<div id="figma-make-kit-root"></div>
-<script type="module">
-  import { stories } from 'virtual:figma-stories'
-  window.__FIGMA__ = Object.assign(window.__FIGMA__ ?? {}, { stories })
-  window.dispatchEvent(new CustomEvent('figma.ready'))
-</script>
-</body>
-</html>`
-
-  return {
-    name: 'figma-make-kit',
-    apply: 'serve',
-    resolveId(id) {
-      if (id === VIRTUAL_ID) return RESOLVED_ID
-      return null
-    },
-    load(id) {
-      if (id !== RESOLVED_ID) return null
-      return STORIES_MODULE
-    },
-    configureServer(server) {
-      server.middlewares.use(async (req, res, next) => {
-        const url = req.url || ''
-        if (url.split('?')[0] !== ROUTE) return next()
-
-        try {
-          res.setHeader('Content-Type', 'text/html')
-          res.end(await server.transformIndexHtml(url, HTML_BOOTSTRAP))
-        } catch (err) {
-          next(err as Error)
-        }
-      })
-    },
-  }
+function FeatureCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
+  return (
+    <div className="glass-panel p-8 rounded-xl flex flex-col gap-6 h-full">
+      <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center text-white border border-white/10">
+        {icon}
+      </div>
+      <h3 className="text-2xl font-bold text-white font-display">{title}</h3>
+      <p className="text-gray-400 text-lg leading-relaxed">{desc}</p>
+    </div>
+  )
 }
